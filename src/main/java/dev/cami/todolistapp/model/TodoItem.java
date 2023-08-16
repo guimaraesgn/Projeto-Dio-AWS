@@ -11,12 +11,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-//@Getter
+@Getter
 @NoArgsConstructor
-//@Setter
+@Setter
 public class TodoItem {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   private String description;
+  private boolean completed;
+  private UUID listId;
 }

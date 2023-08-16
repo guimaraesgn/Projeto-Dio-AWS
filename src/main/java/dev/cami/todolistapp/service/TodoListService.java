@@ -8,30 +8,31 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public record TodoListService(TodoListRepository todoListRepository) {
-
-
+public record TodoListService(
+        TodoListRepository todoListRepository
+) {
 
     public TodoList createTodoList(TodoList todoList) {
         return todoListRepository.save(todoList);
+    }
+
+    public TodoList getTodoList(UUID id) {
+        return todoListRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException("TodoList with id " + id + " does not exist.")
+        );
     }
 
     public List<TodoList> getAllTodoLists() {
         return todoListRepository.findAll();
     }
 
-    public TodoList getTodoList(UUID id) {
-        return todoListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Todo list not found"));
-    }
-
     public TodoList updateTodoList(UUID id, TodoList todoList) {
-        TodoList todoListToUpdate = todoListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Todo list not found"));
-        todoListToUpdate.setTitle(todoList.getTitle());
-        return todoListRepository.save(todoListToUpdate);
+        TodoList existingTodoList = getTodoList(id);
+        existingTodoList.setTitle(todoList.getTitle());
+        return todoListRepository.save(existingTodoList);
     }
 
     public void deleteTodoList(UUID id) {
         todoListRepository.deleteById(id);
     }
-
 }
